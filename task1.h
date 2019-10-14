@@ -1,0 +1,6 @@
+#ifndef PARRARELTASKS_LIBRARY_H
+#define PARRARELTASKS_LIBRARY_H
+
+void hello();
+
+#endif //PARRARELTASKS_LIBRARY_H
