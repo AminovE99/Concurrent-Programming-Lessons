@@ -21,6 +21,14 @@ void task6();
 
 void task7();
 
+void task8();
+
+void task9();
+
+void task10();
+
+void task11();
+
 int main() {
     //task1();
     //task2();
@@ -28,7 +36,76 @@ int main() {
     //task4();
     //task5();
     //task6();
-    task7();
+    //task7();
+    //task8();
+    //task9();
+    task10();
+    task11();
+}
+
+void task11() {
+    omp_set_dynamic(0);
+    omp_set_num_threads(4);
+    int a[20];
+    for (int i = 0; i < 20; i++) {
+        a[i] = rand();
+    }
+    int max = std::numeric_limits<int>::min();
+#pragma omp parallel for shared(max)
+    for (int i = 0; i < 20; i++) {
+        if (a[i] % 7) {
+#pragma omp critical
+            {
+                if (a[i] > max) {
+                    max = a[i];
+                }
+            };
+        }
+    }
+    printf("Max value = %d", max);
+}
+
+void task10() {
+    omp_set_dynamic(0);
+    omp_set_num_threads(30);
+    int count = 0;
+    int n = 30;
+    int a[n];
+    for (int i = 0; i < n; i++) {
+        a[i] = rand();
+    }
+#pragma omp parallel for shared(n)
+    for (int i = 0; i < n; i++) {
+        if (a[i] % 9 == 0) {
+#pragma omp atomic
+            count += 1;
+        }
+    }
+    printf("Count of numbers: %d", count);
+}
+
+void task9() {
+    int N = 6;
+    int M = 8;
+    int threads_count = 10;
+    int a[M][N];
+    omp_set_dynamic(0);
+    omp_set_num_threads(threads_count);
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            a[i][j] = rand();
+        }
+    }
+    int max = std::numeric_limits<int>::max();
+    int min = std::numeric_limits<int>::min();
+#pragma omp parallel for
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < M; j++) {
+            if (a[i][j] > max) {
+
+            }
+        }
+    }
 }
 
 void task7() {
@@ -38,20 +115,24 @@ void task7() {
     int c[N];
     omp_set_dynamic(0);
     omp_set_num_threads(3);
-    #pragma omp parallel for schedule(static, 4)
-    for (int i = 0; i < N;i++){
+#pragma omp parallel for schedule(static, 4)
+    for (int i = 0; i < N; i++) {
         a[i] = rand() % 100;
         b[i] = rand() % 100;
-        printf("part N 1, Thread N %d, thread_count %d", omp_get_thread_num(),omp_get_num_threads());
-        printf("i,a[i],b[i] = %d, %d, %d \n", i, a[i],b[i]);
+        printf("part N 1, Thread N %d, thread_count %d", omp_get_thread_num(), omp_get_num_threads());
+        printf("i,a[i],b[i] = %d, %d, %d \n", i, a[i], b[i]);
     }
     omp_set_num_threads(3);
-    #pragma omp parallel for schedule(dynamic, 3)
-    for (int i = 0; i < N; i++){
+#pragma omp parallel for schedule(dynamic, 3)
+    for (int i = 0; i < N; i++) {
         c[i] = a[i] + b[i];
-        printf("part N 2, Thread N %d, thread_count %d",omp_get_thread_num(),omp_get_num_threads());
-        printf("i,c[i] = %d, %d",i,c[i]);
+        printf("part N 2, Thread N %d, thread_count %d", omp_get_thread_num(), omp_get_num_threads());
+        printf("i,c[i] = %d, %d", i, c[i]);
     }
+}
+
+void task8() {
+    printf("In progress");
 }
 
 void task6() {
@@ -67,10 +148,10 @@ void task6() {
     }
     int average_a = 0;
     int average_b = 0;
-    #pragma omp parallel for reduction(+:average_a, average_b)
-    for(int i = 0; i < N;i++){
-        average_a = average_a+a[i];
-        average_b = average_b+b[i];
+#pragma omp parallel for reduction(+:average_a, average_b)
+    for (int i = 0; i < N; i++) {
+        average_a = average_a + a[i];
+        average_b = average_b + b[i];
     }
     printf("Average a: %d", average_a);
     printf("Average b: %d", average_b);
