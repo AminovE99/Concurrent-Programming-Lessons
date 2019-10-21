@@ -29,6 +29,12 @@ void task10();
 
 void task11();
 
+void task12();
+
+void way1();
+
+void way2();
+
 int main() {
     //task1();
     //task2();
@@ -39,8 +45,45 @@ int main() {
     //task7();
     //task8();
     //task9();
-    task10();
-    task11();
+    //task10();
+    //task11();
+    task12();
+
+}
+
+void task12() {
+    way1();
+    way2();
+}
+
+void way2() {
+    //TODO: realize with locks
+//    omp_set_dynamic(0);
+//    omp_set_num_threads(NUM_THREADS);
+//    omp_lock_t lock;
+//    omp_init_lock(&lock);
+//    int n = 0;
+//    int i = NUM_THREADS - 1; // can be atomic
+//#pragma omp parallel
+//    {
+//        omp_set_lock()
+//    };
+}
+
+void way1() {
+    omp_set_dynamic(0);
+    omp_set_num_threads(NUM_THREADS);
+    int n = 0;
+    int i = NUM_THREADS - 1; // can be atomic
+#pragma omp parallel
+    {
+        while (i != 0) {
+            if (i == omp_get_thread_num()) {
+                printf("Hello,world %d \n", omp_get_thread_num());
+                i--;
+            }
+        }
+    };
 }
 
 void task11() {
